@@ -22,8 +22,6 @@ class MyClass:
     def make(self, servers):
         sparkSession = SparkSession.builder \
             .getOrCreate()
-        conn = psycopg2.connect("host="+servers+" port='5432' dbname='wineDb' user='username' password='password'")
-        cur = conn.cursor()
 
         url = "jdbc:postgresql://" + servers + "/wineDb?user=username&password=password"
         df = (sparkSession.read.format("jdbc")
