@@ -28,6 +28,7 @@ class MyClass:
             .getOrCreate()
 
         url = "jdbc:postgresql://" + server + "/"+dbname+"?user="+user+"&password="+password
+        print(url)
         df = (sparkSession.read.format("jdbc")
               .options(url=url, dbtable="wine_reviews")
               .load())
