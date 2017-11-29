@@ -14,16 +14,20 @@ class MyClass:
 
     def __init__(self):
         parser = argparse.ArgumentParser(description='map')
-        parser.add_argument('--servers', help='the postgreql ip address')
+        parser.add_argument('-server', help='the postgreql ip address or server name')
+        parser.add_argument('-user', help="username")
+        parser.add_argument('-dbname', help='database name')
+        parser.add_argument('-password', help='password')
+
         args = parser.parse_args()
 
-        self.make(args.servers)
+        self.make(args.server, args.user, args.dbname, args.password)
 
-    def make(self, servers):
+    def make(self, server, user, dbname, password):
         sparkSession = SparkSession.builder \
             .getOrCreate()
 
-        url = "jdbc:postgresql://" + servers + "/wineDb?user=username&password=password"
+        url = "jdbc:postgresql://" + server + "/"+dbname+"?user="+user+"&password="+password
         df = (sparkSession.read.format("jdbc")
               .options(url=url, dbtable="wine_reviews")
               .load())
