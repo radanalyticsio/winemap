@@ -22,6 +22,7 @@ def init(self):
 
     self.make(args.server,
               args.user, args.dbname, args.password)
+    print("made")
 
 
 def make(server, user, dbname, password):
@@ -55,6 +56,7 @@ def make(server, user, dbname, password):
     layout = dict(geo={'scope': 'world'})
     choromap = dict(data=[data], layout=layout)
     plot(choromap, filename='map.html')
+    print("map")
 
 
 def make_template():
@@ -66,6 +68,7 @@ def make_template():
     os.system('mv /opt/app-root/src/map.html '
               '/opt/app-root/src/templates/')
     resp = render_template("map.html", title='Maps')
+    print(resp)
     return resp
 
 
@@ -74,6 +77,7 @@ def index():
     # create map
     init()
     resp = make_template()
+    print("NEXT      "+resp)
     return resp
 
 
