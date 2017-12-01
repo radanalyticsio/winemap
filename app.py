@@ -1,76 +1,78 @@
-from flask import Flask
-from flask import app, render_template
 import os
-import pyspark
-from pyspark.sql import SparkSession, SQLContext
-from pyspark.sql.functions import mean, desc
-from plotly.offline import download_plotlyjs, plot
-from plotly.graph_objs import *
-import psycopg2
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import mean
+from plotly.offline import plot
 import argparse
-
-
-class MyClass:
-
-    def __init__(self):
-        parser = argparse.ArgumentParser(description='map')
-        parser.add_argument('-server', help='the postgreql ip address or server name')
-        parser.add_argument('-user', help="username")
-        parser.add_argument('-dbname', help='database name')
-        parser.add_argument('-password', help='password')
-
-        args = parser.parse_args()
-
-        self.make(args.server, args.user, args.dbname, args.password)
-
-    def make(self, server, user, dbname, password):
-        sparkSession = SparkSession.builder \
-            .getOrCreate()
-
-        url = "jdbc:postgresql://" + server + "/"+dbname+"?user="+user+"&password="+password
-        print(url)
-        df = (sparkSession.read.format("jdbc")
-              .options(url=url, dbtable="wine_reviews")
-              .load())
-        table = df.select('country', 'points').groupBy('country').agg(mean('points')).orderBy('avg(points)',
-                                                                                              ascending=False)
-        countryCols = table.select('country').collect()
-        countries = list()
-        for country in countryCols:
-            countries.append(str(country[0]))
-        pointCols = table.select('avg(points)').collect()
-        points = list()
-        for point in pointCols:
-            points.append(point[0])
-        data = dict(type='choropleth',
-                    locationmode='country names',
-                    locations=countries,
-                    colorscale='Blues',
-                    z=points,
-                    colorbar={'title': 'Average Rating'}
-                    )
-        layout = dict(geo={'scope': 'world'})
-        choromap = dict(data=[data], layout=layout)
-        # get the html file path
-        plot(choromap, filename='map.html')
-
-def setUp():
-    MyClass()
-
+from flask import Flask
+from flask import render_template
 app = Flask(__name__)
+
+
+def init(self):
+    parser = argparse.ArgumentParser(description='map')
+    parser.add_argument('-SERVER',
+                        help='the postgreql ip address or server name')
+    parser.add_argument('-USER', help="username")
+    parser.add_argument('-DBNAME', help='database name')
+    parser.add_argument('-PASSWORD', help='password')
+
+    args = parser.parse_args()
+
+    self.make(args.server,
+              args.user, args.dbname, args.password)
+
+
+def make(server, user, dbname, password):
+    spark_session = SparkSession.builder \
+        .getOrCreate()
+
+    url = "jdbc:postgresql://" + server\
+          + "/"+dbname+"?user="+user+"&password="+password
+    print(url)
+    df = (spark_session.read.format("jdbc")
+          .options(url=url, dbtable="wine_reviews")
+          .load())
+    table = df.select('country', 'points')\
+        .groupBy('country').agg(mean('points'))\
+        .orderBy('avg(points)', ascending=False)
+    country_cols = table.select('country').collect()
+    countries = list()
+    for country in country_cols:
+        countries.append(str(country[0]))
+    point_cols = table.select('avg(points)').collect()
+    points = list()
+    for point in point_cols:
+        points.append(point[0])
+    data = dict(type='choropleth',
+                locationmode='country names',
+                locations=countries,
+                colorscale='Blues',
+                z=points,
+                colorbar={'title': 'Average Rating'}
+                )
+    layout = dict(geo={'scope': 'world'})
+    choromap = dict(data=[data], layout=layout)
+    plot(choromap, filename='map.html')
+
+
+def make_template():
+    # make the templates dir
+    new_path = r'/opt/app-root/src/templates'
+    if not os.path.exists(new_path):
+        os.makedirs(new_path)
+    # move the file to the templates dir
+    os.system('mv /opt/app-root/src/map.html '
+              '/opt/app-root/src/templates/')
+    resp = render_template("map.html", title='Maps')
+    return resp
+
 
 @app.route('/')
 def index():
-    setUp()
-     # make the templates dir
-    newpath = r'/opt/app-root/src/templates'
-    if not os.path.exists(newpath):
-        os.makedirs(newpath)
-    # move the file to the templates dir
-    os.system('mv /opt/app-root/src/map.html /opt/app-root/src/templates/')
-    #os.chmod(/opt/app-root/src/templates/map.html', 077)
-    resp = render_template("map.html", title='Maps')
-    return resp
+    # create map
+    init()
+    make_template()
+
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
