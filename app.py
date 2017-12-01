@@ -5,6 +5,8 @@ from plotly.offline import plot
 import argparse
 from flask import Flask
 from flask import render_template
+import app
+
 app = Flask(__name__)
 
 
