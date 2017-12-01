@@ -73,7 +73,7 @@ def make_template():
 def index():
     # create map
     init()
-    make_template()
+    return make_template()
 
 
 if __name__ == '__main__':
