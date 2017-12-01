@@ -69,7 +69,7 @@ def make_template():
     return resp
 
 
-@app.route('/')
+@app.route('/wine')
 def index():
     print("in index")
     WineMapGenerator()
