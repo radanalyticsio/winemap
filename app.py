@@ -70,6 +70,7 @@ class WineMapGenerator:
 
 @app.route('/')
 def index():
+    print("in index")
     wmg = WineMapGenerator()
     resp = wmg.make_template()
     print(resp)
@@ -80,3 +81,4 @@ if __name__ == '__main__':
     print("in main")
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
+    print("running app")
