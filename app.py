@@ -3,8 +3,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import mean
 from plotly.offline import plot
 import argparse
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template
 
 
 app = Flask(__name__)
@@ -75,6 +74,7 @@ def make_template():
 @app.route('/')
 def index():
     # create map
+    print("in index")
     init()
     resp = make_template()
     print("NEXT      "+resp)
