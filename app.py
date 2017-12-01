@@ -20,7 +20,7 @@ class WineMapGenerator:
         parser.add_argument('-PASSWORD', help='password')
         args = parser.parse_args()
         print("in init")
-        self.make(args.server,
+        self.make(self, args.server,
                   args.user, args.dbname, args.password)
 
     def make(self, server, user, dbname, password):
@@ -55,24 +55,25 @@ class WineMapGenerator:
         choromap = dict(data=[data], layout=layout)
         plot(choromap, filename='map.html')
 
-    def make_template(self):
-        # make the templates dir
-        new_path = r'/opt/app-root/src/templates'
-        if not os.path.exists(new_path):
-            os.makedirs(new_path)
+
+def make_template():
+    # make the templates dir
+    new_path = r'/opt/app-root/src/templates'
+    if not os.path.exists(new_path):
+        os.makedirs(new_path)
         # move the file to the templates dir
-        os.system('mv /opt/app-root/src/map.html '
-                  '/opt/app-root/src/templates/')
-        resp = render_template("map.html", title='Maps')
-        print(resp)
-        return resp
+    os.system('mv /opt/app-root/src/map.html '
+                    '/opt/app-root/src/templates/')
+    resp = render_template("map.html", title='Maps')
+    print(resp)
+    return resp
 
 
 @app.route('/')
 def index():
     print("in index")
-    wmg = WineMapGenerator()
-    resp = wmg.make_template()
+    WineMapGenerator()
+    resp = make_template()
     print(resp)
     return resp
 
@@ -80,5 +81,5 @@ def index():
 if __name__ == '__main__':
     print("in main")
     port = int(os.environ.get("PORT", 8080))
-    app.run(host='0.0.0.0', port=port)
     print("running app")
+    app.run(host='0.0.0.0', port=port)
