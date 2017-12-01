@@ -9,7 +9,7 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 
-class WineMapGenerator():
+class WineMapGenerator:
 
     def __init__(self):
         parser = argparse.ArgumentParser(description='map')
@@ -19,6 +19,7 @@ class WineMapGenerator():
         parser.add_argument('-DBNAME', help='database name')
         parser.add_argument('-PASSWORD', help='password')
         args = parser.parse_args()
+        print("in init")
         self.make(args.server,
                   args.user, args.dbname, args.password)
 
@@ -71,6 +72,7 @@ class WineMapGenerator():
 def index():
     wmg = WineMapGenerator()
     resp = wmg.make_template()
+    print(resp)
     return resp
 
 
