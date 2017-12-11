@@ -28,7 +28,7 @@ class WineMapGenerator:
         url = "jdbc:postgresql://" + server\
               + "/"+dbname+"?user="+user+"&password="+password
         df = (spark_session.read.format("jdbc")
-              .options(url=url, dbtable="wine_reviews", "driver"="org.postgresql.Driver")
+              .options(url=url, dbtable="wine_reviews", driver="org.postgresql.Driver")
               .load())
         table = df.select('country', 'points')\
             .groupBy('country').agg(mean('points'))\
