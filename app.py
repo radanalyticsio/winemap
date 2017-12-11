@@ -26,6 +26,8 @@ class WineMapGenerator:
         spark_session = SparkSession.builder \
                       .config("spark.driver.extraClassPath",
                               "/opt/app-root/src/.ivy2/jars/org.postgresql_postgresql-42.1.4.jar")\
+            .config("spark.executor.extraClassPath" ,
+                    "/opt/app-root/src/.ivy2/jars/org.postgresql_postgresql-42.1.4.jar")
             .getOrCreate()
 
         url = "jdbc:postgresql://" + server\
