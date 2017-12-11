@@ -25,7 +25,6 @@ class WineMapGenerator:
     def make(self, server, user, dbname, password):
         spark_session = SparkSession.builder \
             .getOrCreate()
-        os.system("mv /opt/app-root/src/.ivy2/jars/org.postgresql_postgresql-42.1.4.jar /opt/app-root/src/")
         url = "jdbc:postgresql://" + server\
               + "/"+dbname+"?user="+user+"&password="+password
         df = (spark_session.read.format("jdbc")
