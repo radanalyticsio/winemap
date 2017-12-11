@@ -7,5 +7,5 @@ oc new-app --template oshinko-pyspark-build-dc -p APPLICATION_NAME=winemap -p GI
 
 oc expose svc/
 
-oc new-app --template oshinko-pyspark-build-dc -p APPLICATION_NAME=winemap -p GIT_URI=https://github.com/rebeccaSimmonds19/winemap.git -p SPARK_OPTIONS='--packages org.postgresql:postgresql:42.1.4 --conf spark.driver.extraClassPath=postgresql-42.1.4.jar' -p APP_ARGS="-server=postgresql -user=username -password=password -dbname=wineDb"
+oc new-app --template oshinko-pyspark-build-dc -p APPLICATION_NAME=winemap -p GIT_URI=https://github.com/rebeccaSimmonds19/winemap.git -p SPARK_OPTIONS='--packages org.postgresql:postgresql:42.1.4 --conf spark.driver.extraClassPath=postgresql-42.1.4.jar' -p APP_ARGS="p APP_ARGS="-SERVER=postgresql -USER=username -PASSWORD=password -DBNAME=wineDb"
 
