@@ -19,8 +19,7 @@ class WineMapGenerator:
         parser.add_argument('-DBNAME', help='database name')
         parser.add_argument('-PASSWORD', help='password')
         args = parser.parse_args()
-        print("in init")
-        self.make(self, args.SERVER,
+        self.make(args.SERVER,
                   args.USER, args.DBNAME, args.PASSWORD)
 
     def make(self, server, user, dbname, password):
