@@ -20,8 +20,8 @@ class WineMapGenerator:
         parser.add_argument('-PASSWORD', help='password')
         args = parser.parse_args()
         print("in init")
-        self.make(self, args.server,
-                  args.user, args.dbname, args.password)
+        self.make(self, args.SERVER,
+                  args.USER, args.DBNAME, args.PASSWORD)
 
     def make(self, server, user, dbname, password):
         spark_session = SparkSession.builder \
@@ -69,9 +69,8 @@ def make_template():
     return resp
 
 
-@app.route('/wine')
+@app.route('/')
 def index():
-    print("in index")
     WineMapGenerator()
     resp = make_template()
     print(resp)
@@ -79,7 +78,5 @@ def index():
 
 
 if __name__ == '__main__':
-    print("in main")
     port = int(os.environ.get("PORT", 8080))
-    print("running app")
     app.run(host='0.0.0.0', port=port)
