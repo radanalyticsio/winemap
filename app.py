@@ -28,8 +28,8 @@ class WineMapGenerator:
 
         url = "jdbc:postgresql://" + server\
               + "/"+dbname+"?user="+user+"&password="+password
-        print(url)
         df = (spark_session.read.format("jdbc")
+              .config("spark.driver.extraClassPath", "/opt/app-root/src/.ivy2/jars/org.postgresql_postgresql-42.1.4.jar")
               .options(url=url, dbtable="wine_reviews")
               .load())
         table = df.select('country', 'points')\
