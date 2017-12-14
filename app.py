@@ -1,4 +1,5 @@
 import os
+import shutil
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import mean
 from plotly.offline import plot
@@ -23,32 +24,26 @@ class WineMapGenerator:
                   args.USER, args.DBNAME, args.PASSWORD)
 
     def make(self, server, user, dbname, password):
-        spark_session = SparkSession.builder \
-            .getOrCreate()
-        url = "jdbc:postgresql://" + server\
-              + "/"+dbname+"?user="+user+"&password="+password
-        df = (spark_session.read.format("jdbc")
-              .options(url=url, dbtable="wine_reviews", 
-                       driver="org.postgresql.Driver")
-              .load())
-        table = df.select('country', 'points')\
-            .groupBy('country').agg(mean('points'))\
-            .orderBy('avg(points)', ascending=False)
+        spark_session = SparkSession.builder.getOrCreate()
+        url = "jdbc:postgresql://{0}/{1}?user={2}&password={3}".format(
+            server, dbname, user, password)
+        df = spark_session.read.format("jdbc").options(
+            url=url,
+            dbtable="wine_reviews",
+            driver="org.postgresql.Driver").load()
+        table = (df.select('country', 'points')
+            .groupBy('country').agg(mean('points'))
+            .orderBy('avg(points)', ascending=False))
         country_cols = table.select('country').collect()
-        countries = list()
-        for country in country_cols:
-            countries.append(str(country[0]))
+        countries = [country[0] for country in country_cols]
         point_cols = table.select('avg(points)').collect()
-        points = list()
-        for point in point_cols:
-            points.append(point[0])
+        points = [point[0] for point in point_cols]
         data = dict(type='choropleth',
                     locationmode='country names',
                     locations=countries,
                     colorscale='Blues',
                     z=points,
-                    colorbar={'title': 'Average Rating'}
-                    )
+                    colorbar={'title': 'Average Rating'})
         layout = dict(geo={'scope': 'world'})
         choromap = dict(data=[data], layout=layout)
         plot(choromap, filename='map.html')
@@ -56,21 +51,17 @@ class WineMapGenerator:
 
 def make_template():
     # make the templates dir
-    new_path = r'/opt/app-root/src/templates'
+    new_path = '/opt/app-root/src/templates'
     if not os.path.exists(new_path):
         os.makedirs(new_path)
         # move the file to the templates dir
-    os.system('mv /opt/app-root/src/map.html '
-                    '/opt/app-root/src/templates/')
-    resp = render_template("map.html", title='Maps')
-    return resp
-
+        shutil.move('/opt/app-root/src/map.html', new_path)
+    return render_template("map.html", title='Maps')
 
 @app.route('/')
 def index():
     WineMapGenerator()
-    resp = make_template()
-    return resp
+    return make_template()
 
 
 if __name__ == '__main__':
