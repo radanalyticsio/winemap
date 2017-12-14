@@ -54,8 +54,8 @@ def make_template():
     new_path = '/opt/app-root/src/templates'
     if not os.path.exists(new_path):
         os.makedirs(new_path)
-    # move the file to the templates dir
-    shutil.move('/opt/app-root/src/map.html', new_path)
+        # move the file to the templates dir
+        shutil.move('/opt/app-root/src/map.html', new_path)
     return render_template("map.html", title='Maps')
 
 @app.route('/')
