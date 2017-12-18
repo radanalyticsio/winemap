@@ -1,4 +1,5 @@
 import os
+from os import environ
 import shutil
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import mean
@@ -13,15 +14,12 @@ app = Flask(__name__)
 class WineMapGenerator:
 
     def __init__(self):
-        parser = argparse.ArgumentParser(description='map')
-        parser.add_argument('-SERVER',
-                            help='the postgreql ip address or server name')
-        parser.add_argument('-USER', help="username")
-        parser.add_argument('-DBNAME', help='database name')
-        parser.add_argument('-PASSWORD', help='password')
-        args = parser.parse_args()
-        self.make(args.SERVER,
-                  args.USER, args.DBNAME, args.PASSWORD)
+        server = environ.get("SERVER")
+        user = environ.get("USER")
+        password = environ.get("PASSWORD")
+        dbname = environ.get("DBNAME")
+        self.make(server,
+                  user, dbname, password)
 
     def make(self, server, user, dbname, password):
         spark_session = SparkSession.builder.getOrCreate()
