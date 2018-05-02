@@ -6,6 +6,7 @@ RESOURCE_DIR="$(dirname "${BASH_SOURCE}")/../resources"
 
 os::test::junit::declare_suite_start "cmd/create"
 
+<<<<<<< HEAD
 os::cmd::expect_success 'oc new-project winemap-namespace' 
 
 os::cmd::try_until_text 'oc new-app --template=postgresql-persistent -p POSTGRESQL_USER=username -p POSTGRESQL_PASSWORD=password -p POSTGRESQL_DATABASE=wineDb' 'Success'
@@ -25,3 +26,5 @@ os::cmd::try_until_text 'oc new-app --template=oshinko-python-spark-build-dc -p 
 
 
 
+=======
+>>>>>>> 299f2691105cffbf113ab96c6a7322bbd3319c55
