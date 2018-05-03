@@ -6,7 +6,6 @@ RESOURCE_DIR="$(dirname "${BASH_SOURCE}")/../resources"
 
 os::test::junit::declare_suite_start "cmd/create"
 
-<<<<<<< HEAD
 os::cmd::expect_success 'oc new-project winemap-namespace' 
 
 os::cmd::try_until_text 'oc new-app --template=postgresql-persistent -p POSTGRESQL_USER=username -p POSTGRESQL_PASSWORD=password -p POSTGRESQL_DATABASE=wineDb' 'Success'
@@ -22,9 +21,3 @@ os::cmd::try_until_text 'oc create -f https://radanalytics.io/resources.yaml' 'r
 os::cmd::try_until_text 'oc get templates' 'oshinko-webui'
 
 os::cmd::try_until_text 'oc new-app --template=oshinko-python-spark-build-dc -p APPLICATION_NAME=winemap -p GIT_URI=https://github.com/radanalyticsio/winemap.git -p SPARK_OPTIONS='"'"'--packages org.postgresql:postgresql:42.1.4'"'"'-p APP_ARGS="-SERVER=postgresql -USER=username -PASSWORD=password -DBNAME=wineDb"' 'Success'
-
-
-
-
-=======
->>>>>>> 299f2691105cffbf113ab96c6a7322bbd3319c55
