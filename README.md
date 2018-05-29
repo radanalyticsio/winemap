@@ -1,9 +1,13 @@
 # winemap
+
+Prerequisites:
+
+https://radanalytics.io/get-started
+
+https://github.com/radanalyticsio/winemap-data-loader
+ 
 This is the app that calls a postgresql db to show a map of wine reviews using these commands:
 
-```sh
-oc create -f https://radanalytics.io/resources.yaml
-```
 
 ```sh
 oc new-app --template=oshinko-python-spark-build-dc \
