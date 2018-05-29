@@ -22,7 +22,7 @@ class WineMapGenerator:
                   user, dbname, password)
 
     def make(self, server, user, dbname, password):
-        spark_session = SparkSession.builder.getOrCreate()
+        spark_session = SparkSession.builder.appName('winemap').getOrCreate()
         url = "jdbc:postgresql://{0}/{1}?user={2}&password={3}".format(
             server, dbname, user, password)
         df = spark_session.read.format("jdbc").options(
@@ -39,7 +39,7 @@ class WineMapGenerator:
         data = dict(type='choropleth',
                     locationmode='country names',
                     locations=countries,
-                    colorscale='Blues',
+                    colorscale='Jet',
                     z=points,
                     colorbar={'title': 'Average Rating'})
         layout = dict(geo={'scope': 'world'})
